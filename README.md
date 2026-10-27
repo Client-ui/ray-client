@@ -13,9 +13,7 @@ A client-side Fabric quality-of-life and visual customization mod for Minecraft 
 
 Ray aims to stay vanilla-friendly, but individual servers may restrict particular client mods or features. Check the rules of each server; no third-party client can guarantee acceptance everywhere.
 
-## Build
 
-Requires Java 21 and Gradle. Run `gradle build --no-daemon`. The JAR is written to `build/libs/ray-client-1.5.jar`.
 
 
 ## Client-side options
