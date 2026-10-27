@@ -1,9 +1,7 @@
 package dev.ray;
 
 import java.awt.Color;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 public final class Theme {
 	// Ray Blue is the default accent.
@@ -22,9 +20,9 @@ public final class Theme {
 	}
 
 	public static Text fontText(String value) {
-		int font = Math.max(0, Math.min(2, RayConfig.get().uiFont));
-		String[] ids = {"default", "uniform", "alt"};
-		return Text.literal(value).setStyle(Style.EMPTY.withFont(Identifier.of("minecraft", ids[font])));
+		// Minecraft 1.21.11 changed the text font API. Use the default font
+		// until a compatible custom font resource is registered.
+		return Text.literal(value);
 	}
 
 	public static int accent() {

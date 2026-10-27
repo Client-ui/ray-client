@@ -162,7 +162,7 @@ public class RayClient implements ClientModInitializer {
 		if (mc.player != null && RayConfig.get().toggleSprint) {
 			boolean movingForward = mc.options.forwardKey.isPressed();
 			boolean allowed = mc.currentScreen == null && movingForward && !mc.player.isSneaking() && !mc.player.isTouchingWater()
-				&& !mc.player.isFallFlying() && !mc.player.isUsingItem();
+				&& !mc.player.isGliding() && !mc.player.isUsingItem();
 			mc.player.setSprinting(allowed);
 		}
 		applyFullbright(mc);
