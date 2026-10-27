@@ -1,0 +1,9 @@
+{
+  "key.lumina.menu": "Open Ray Client Menu",
+  "key.lumina.zoom": "Zoom",
+  "key.lumina.waypoint": "Add Waypoint",
+  "key.lumina.copycoords": "Copy Coordinates",
+  "key.lumina.stopwatch": "Stopwatch Start/Stop",
+  "key.lumina.stopwatchreset": "Stopwatch Reset",
+  "key.category.lumina.main": "Ray Client"
+}
