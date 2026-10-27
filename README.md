@@ -1,4 +1,4 @@
-# Ray Client v1.5 v1.5
+# Ray Client v1.5 
 
 A client-side Fabric quality-of-life and visual customization mod for Minecraft 1.21.11.
 
