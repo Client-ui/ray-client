@@ -1,4 +1,4 @@
-# Lumina Client (Fabric 1.21.11)
+# Ray (Fabric 1.21.11)
 
 Features: FPS, CPS, ping, coordinates, direction, clock, RAM, keystrokes (WASD/mouse/space),
 armor + durability HUD, zoom (hold C), toggle sprint, in-game settings menu (Right Shift).
