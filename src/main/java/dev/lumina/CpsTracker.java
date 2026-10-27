@@ -10,6 +10,7 @@ public final class CpsTracker {
 	private static final ArrayDeque<Long> LEFT = new ArrayDeque<>();
 	private static final ArrayDeque<Long> RIGHT = new ArrayDeque<>();
 	private static boolean leftDown, rightDown;
+	private static int totalL, totalR, best;
 
 	private CpsTracker() {}
 
@@ -19,8 +20,9 @@ public final class CpsTracker {
 		boolean r = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
 		long now = System.currentTimeMillis();
 		if (mc.currentScreen == null) {
-			if (l && !leftDown) LEFT.addLast(now);
-			if (r && !rightDown) RIGHT.addLast(now);
+			if (l && !leftDown) { LEFT.addLast(now); totalL++; }
+			if (r && !rightDown) { RIGHT.addLast(now); totalR++; }
+			best = Math.max(best, Math.max(count(LEFT), count(RIGHT)));
 		}
 		leftDown = l;
 		rightDown = r;
@@ -30,6 +32,9 @@ public final class CpsTracker {
 	public static int right() { return count(RIGHT); }
 	public static boolean leftHeld() { return leftDown; }
 	public static boolean rightHeld() { return rightDown; }
+	public static int totalLeft() { return totalL; }
+	public static int totalRight() { return totalR; }
+	public static int best() { return best; }
 
 	private static int count(ArrayDeque<Long> q) {
 		long cutoff = System.currentTimeMillis() - 1000;
