@@ -19,7 +19,7 @@ import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class RayClient implements ClientModInitializer {
-	public static final String MOD_ID = "Ray";
+	public static final String MOD_ID = "ray";
 
 	private static KeyBinding menuKey;
 	private static KeyBinding zoomKey;
