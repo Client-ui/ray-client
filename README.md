@@ -2,7 +2,7 @@
 
 Features: FPS, CPS, ping, coordinates, direction, clock, RAM, keystrokes (WASD/mouse/space),
 armor + durability HUD, zoom (hold C), toggle sprint, in-game settings menu (Right Shift).
-Config is saved to `.minecraft/config/lumina.json`.
+And thats not all! this client features a lot of modules 50+
 
 
 
