@@ -1,0 +1,92 @@
+package dev.ray;
+
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
+
+/** Base for every Ray settings page: a centred window with a back button, a scrolling body and optional reset. */
+public abstract class SettingsScreen extends Screen {
+	protected final Screen parent;
+	protected final Ui ui = new Ui();
+	private final String heading;
+	private int scroll = 0, scrollMax = 0;
+
+	protected SettingsScreen(Screen parent, String heading) {
+		super(Text.literal(heading));
+		this.parent = parent;
+		this.heading = heading;
+	}
+
+	/** Adds this page's rows. Called every frame inside the scrolling viewport. */
+	protected abstract void rows(Ui ui, Ui.Form f);
+
+	protected boolean hasReset() {
+		return false;
+	}
+
+	protected void onReset() {}
+
+	protected void afterFrame() {}
+
+	public void open(Screen next) {
+		client.setScreen(next);
+	}
+
+	@Override
+	protected void init() {
+		ui.reset();
+	}
+
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+		scroll = Math.max(0, Math.min(scrollMax, scroll - (int) (verticalAmount * 20)));
+		return true;
+	}
+
+	@Override
+	public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
+		super.render(ctx, mouseX, mouseY, delta);
+		if (client.world == null) Brand.backdrop(ctx, width, height, System.currentTimeMillis(), 1.0f);
+		ui.begin(ctx, textRenderer, mouseX, mouseY);
+		int accent = Theme.accent();
+
+		int pw = Math.min(460, width - 16);
+		int ph = Math.min(290, height - 16);
+		int px = (width - pw) / 2, py = (height - ph) / 2;
+		ui.panel(px, py, pw, ph, 5, Theme.PANEL, Theme.fade(accent, 0.55f));
+		ui.rect(px + 1, py + 1, pw - 2, 2, accent);
+
+		// header: back + title (+ reset)
+		boolean backHov = ui.over(px + 8, py + 9, 46, 17);
+		ui.rrect(px + 8, py + 9, 46, 17, 3, backHov ? Theme.CARD_HOVER : Theme.CARD);
+		ui.backIcon(px + 14, py + 14, Theme.DIM);
+		ui.text("Back", px + 25, py + 14, Theme.TEXT);
+		ui.click("back", px + 8, py + 9, 46, 17, this::close);
+		ui.textShadow(heading, px + 62, py + 14, 0xFFFFFFFF);
+		if (hasReset()) {
+			ui.labelButton(px + pw - 78, py + 9, 70, 17, "Reset", 0xFF7F1D1D, this::onReset);
+		}
+		ui.rect(px + 8, py + 31, pw - 16, 1, Theme.STROKE);
+
+		// scrolling body
+		int vx = px + 12, vy = py + 38, vw = pw - 28, vh = ph - 38 - 22;
+		ui.pushClip(vx - 2, vy, vw + 4, vh);
+		Ui.Form f = new Ui.Form(ui, vx, vy - scroll, vw);
+		rows(ui, f);
+		int contentH = f.bottom() - (vy - scroll);
+		ui.popClip();
+		scrollMax = Math.max(0, contentH - vh);
+		scroll = Math.max(0, Math.min(scrollMax, scroll));
+		ui.scrollbar(px + pw - 9, vy, vh, vh, contentH, scroll);
+
+		ui.right("ESC to go back", px + pw - 10, py + ph - 14, Theme.MUTE);
+		afterFrame();
+		ui.poll();
+	}
+
+	@Override
+	public void close() {
+		RayConfig.save();
+		client.setScreen(parent);
+	}
+}
