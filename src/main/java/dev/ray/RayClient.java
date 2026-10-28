@@ -193,21 +193,15 @@ public class RayClient implements ClientModInitializer {
 
 		// Fullbright: brightness (gamma) pushed far past the vanilla maximum, so nothing is dark. No potion effect.
 		// If the gamma hook could not attach, falls back to a client-side night vision effect instead.
+		// Fullbright: Pushes gamma level directly up safely on all servers without potion effects
 		if (c2.fullbright && mc.player != null) {
-			Object gamma = mc.options.getGamma();
-			if (gamma instanceof dev.ray.mixin.SimpleOptionAccessor acc) {
-				if (!gammaForced) {
-					savedGamma = mc.options.getGamma().getValue();
-					gammaForced = true;
-				}
-				if (mc.options.getGamma().getValue() != (double) c2.fullbrightLevel) acc.ray$setRawValue((double) c2.fullbrightLevel);
-				if (nvForced) {
-					mc.player.removeStatusEffect(StatusEffects.NIGHT_VISION);
-					nvForced = false;
-				}
-			} else if (!mc.player.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
-				mc.player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, StatusEffectInstance.INFINITE, 0, false, false, false));
-				nvForced = true;
+			if (!gammaForced) {
+				savedGamma = mc.options.getGamma().getValue();
+				gammaForced = true;
+			}
+			double targetGamma = (double) c2.fullbrightLevel;
+			if (mc.options.getGamma().getValue() != targetGamma) {
+				mc.options.getGamma().setValue(targetGamma);
 			}
 		} else {
 			restoreFullbright(mc);
@@ -239,18 +233,15 @@ public class RayClient implements ClientModInitializer {
 		}
 	}
 
-	public static boolean fullbrightActive() {
-		return nvForced;
+	
+public static boolean fullbrightActive() {
+		return gammaForced;
 	}
 
 	private static void restoreFullbright(MinecraftClient mc) {
-		if (gammaForced && mc.options.getGamma() instanceof dev.ray.mixin.SimpleOptionAccessor acc) {
-			acc.ray$setRawValue(savedGamma);
-		}
-		gammaForced = false;
-		if (nvForced) {
-			if (mc.player != null) mc.player.removeStatusEffect(StatusEffects.NIGHT_VISION);
-			nvForced = false;
+		if (gammaForced) {
+			mc.options.getGamma().setValue(savedGamma);
+			gammaForced = false;
 		}
 	}
 
